@@ -4,6 +4,7 @@ public class MachineRepair : MonoBehaviour
 {
     [SerializeField] private string requiredTool = "Wrench";
     [SerializeField] private GameObject brokenMarker;
+    [SerializeField] private AudioSource breakSound;
 
     private bool isBroken = false;
 
@@ -29,6 +30,9 @@ public class MachineRepair : MonoBehaviour
 
         if (brokenMarker != null)
             brokenMarker.SetActive(true);
+
+        if (breakSound != null)
+            breakSound.Play();
 
         Debug.Log(gameObject.name + " is kapot!");
     }
