@@ -5,6 +5,8 @@ public class MachineRepair : MonoBehaviour
     [SerializeField] private string requiredTool = "Wrench";
     [SerializeField] private GameObject brokenMarker;
     [SerializeField] private AudioSource breakSound;
+    [SerializeField] private GameObject explosionPrefab;
+    [SerializeField] private Transform explosionPoint;
 
     private bool isBroken = false;
 
@@ -34,6 +36,8 @@ public class MachineRepair : MonoBehaviour
         if (breakSound != null)
             breakSound.Play();
 
+        SpawnExplosion();
+
         Debug.Log(gameObject.name + " is kapot!");
     }
 
@@ -48,5 +52,19 @@ public class MachineRepair : MonoBehaviour
             brokenMarker.SetActive(false);
 
         Debug.Log(gameObject.name + " repaired!");
+    }
+
+    private void SpawnExplosion()
+    {
+        if (explosionPrefab == null || explosionPoint == null)
+            return;
+
+        GameObject explosion = Instantiate(
+            explosionPrefab,
+            explosionPoint.position,
+            explosionPoint.rotation
+        );
+
+        Destroy(explosion, 5f);
     }
 }
