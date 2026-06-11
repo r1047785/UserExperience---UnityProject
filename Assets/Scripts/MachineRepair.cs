@@ -7,6 +7,7 @@ public class MachineRepair : MonoBehaviour
     [SerializeField] private AudioSource breakSound;
     [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private Transform explosionPoint;
+    [SerializeField] private ParticleSystem smokeLoop;
 
     private bool isBroken = false;
 
@@ -16,6 +17,9 @@ public class MachineRepair : MonoBehaviour
     {
         if (brokenMarker != null)
             brokenMarker.SetActive(false);
+
+        if (smokeLoop != null)
+            smokeLoop.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
     }
 
     public bool CanRepair(string currentTool)
@@ -38,6 +42,9 @@ public class MachineRepair : MonoBehaviour
 
         SpawnExplosion();
 
+        if (smokeLoop != null)
+            smokeLoop.Play(true);
+
         Debug.Log(gameObject.name + " is kapot!");
     }
 
@@ -51,6 +58,9 @@ public class MachineRepair : MonoBehaviour
         if (brokenMarker != null)
             brokenMarker.SetActive(false);
 
+        if (smokeLoop != null)
+            smokeLoop.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
         Debug.Log(gameObject.name + " repaired!");
     }
 
@@ -59,12 +69,7 @@ public class MachineRepair : MonoBehaviour
         if (explosionPrefab == null || explosionPoint == null)
             return;
 
-        GameObject explosion = Instantiate(
-            explosionPrefab,
-            explosionPoint.position,
-            explosionPoint.rotation
-        );
-
+        GameObject explosion = Instantiate(explosionPrefab, explosionPoint.position, explosionPoint.rotation);
         Destroy(explosion, 5f);
     }
 }
