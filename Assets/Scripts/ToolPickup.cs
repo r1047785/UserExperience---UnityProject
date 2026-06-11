@@ -2,46 +2,23 @@ using UnityEngine;
 
 public class ToolPickup : MonoBehaviour
 {
-    public string toolName;
+    [SerializeField] private string toolName;
 
-    private bool playerNearby = false;
-
-    void Update()
+    public void Pickup()
     {
-        if (playerNearby && Input.GetKeyDown(KeyCode.E))
+        if (PlayerInventory.currentTool != "")
         {
-            if (PlayerInventory.currentTool != "")
-            {
-                Debug.Log("Drop eerst je huidige tool!");
-                return;
-            }
-
-            PlayerInventory.currentTool = toolName;
-
-            PlayerInventory inventory =
-                FindFirstObjectByType<PlayerInventory>();
-
-            inventory.EquipTool(toolName);
-
-            gameObject.SetActive(false);
-
-            Debug.Log("Tool gekozen: " + toolName);
+            Debug.Log("Drop eerst je huidige tool!");
+            return;
         }
-    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            playerNearby = true;
-        }
-    }
+        PlayerInventory.currentTool = toolName;
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            playerNearby = false;
-        }
+        PlayerInventory inventory = FindFirstObjectByType<PlayerInventory>();
+        inventory.EquipTool(toolName);
+
+        gameObject.SetActive(false);
+
+        Debug.Log("Tool gekozen: " + toolName);
     }
 }
