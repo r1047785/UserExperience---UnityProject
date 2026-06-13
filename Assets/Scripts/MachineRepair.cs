@@ -8,6 +8,7 @@ public class MachineRepair : MonoBehaviour
     [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private Transform explosionPoint;
     [SerializeField] private ParticleSystem smokeLoop;
+    [SerializeField] private FactoryLights factoryLights;
 
     private bool isBroken = false;
 
@@ -45,6 +46,9 @@ public class MachineRepair : MonoBehaviour
         if (smokeLoop != null)
             smokeLoop.Play(true);
 
+        if (factoryLights != null)
+            factoryLights.MachineBroken();
+
         Debug.Log(gameObject.name + " is kapot!");
     }
 
@@ -61,6 +65,9 @@ public class MachineRepair : MonoBehaviour
         if (smokeLoop != null)
             smokeLoop.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 
+        if (factoryLights != null)
+            factoryLights.MachineRepaired();
+
         Debug.Log(gameObject.name + " repaired!");
     }
 
@@ -69,7 +76,12 @@ public class MachineRepair : MonoBehaviour
         if (explosionPrefab == null || explosionPoint == null)
             return;
 
-        GameObject explosion = Instantiate(explosionPrefab, explosionPoint.position, explosionPoint.rotation);
+        GameObject explosion = Instantiate(
+            explosionPrefab,
+            explosionPoint.position,
+            explosionPoint.rotation
+        );
+
         Destroy(explosion, 5f);
     }
 }
