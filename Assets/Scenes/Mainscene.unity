@@ -1847,6 +1847,7 @@ MonoBehaviour:
   playerController: {fileID: 2131861738}
   introAudio: {fileID: 722588615}
   machineManager: {fileID: 2036876267}
+  timerManager: {fileID: 744894112}
 --- !u!4 &64942251
 Transform:
   m_ObjectHideFlags: 0
@@ -2063,7 +2064,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aa277dfa53b56042b9911ff35bcd212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requiredTool: Wrench
+  requiredTool: Screwdriver
   brokenMarker: {fileID: 1584787898}
   breakSound: {fileID: 1818685254}
   explosionPrefab: {fileID: 9111320563476075686, guid: c6fb71e58ec36784687d958bc39de3f2, type: 3}
@@ -10926,7 +10927,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aa277dfa53b56042b9911ff35bcd212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requiredTool: Wrench
+  requiredTool: Hammer
   brokenMarker: {fileID: 152681436}
   breakSound: {fileID: 1227077091}
   explosionPrefab: {fileID: 9111320563476075686, guid: c6fb71e58ec36784687d958bc39de3f2, type: 3}
@@ -11222,7 +11223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aa277dfa53b56042b9911ff35bcd212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requiredTool: Wrench
+  requiredTool: Screwdriver
   brokenMarker: {fileID: 1619905380}
   breakSound: {fileID: 58838933}
   explosionPrefab: {fileID: 9111320563476075686, guid: c6fb71e58ec36784687d958bc39de3f2, type: 3}
@@ -26098,6 +26099,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerText: {fileID: 843064061}
   gameOverText: {fileID: 380961627}
+  startTime: 300
 --- !u!4 &744894113
 Transform:
   m_ObjectHideFlags: 0
@@ -30270,7 +30272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aa277dfa53b56042b9911ff35bcd212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requiredTool: Wrench
+  requiredTool: Pliers
   brokenMarker: {fileID: 2073298993}
   breakSound: {fileID: 1721643771}
   explosionPrefab: {fileID: 9111320563476075686, guid: c6fb71e58ec36784687d958bc39de3f2, type: 3}
@@ -36952,7 +36954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aa277dfa53b56042b9911ff35bcd212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requiredTool: Wrench
+  requiredTool: Hammer
   brokenMarker: {fileID: 534862611}
   breakSound: {fileID: 1046449102}
   explosionPrefab: {fileID: 9111320563476075686, guid: c6fb71e58ec36784687d958bc39de3f2, type: 3}
@@ -53871,6 +53873,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 993844012}
+  highScoreText: {fileID: 0}
 --- !u!4 &1679692474
 Transform:
   m_ObjectHideFlags: 0
@@ -62539,8 +62542,8 @@ MonoBehaviour:
   - {fileID: 388430930}
   - {fileID: 882003516}
   - {fileID: 1423634227}
-  minBreakTime: 4
-  maxBreakTime: 8
+  minBreakTime: 15
+  maxBreakTime: 30
 --- !u!4 &2036876268
 Transform:
   m_ObjectHideFlags: 0
@@ -64969,6 +64972,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactDistance: 1
+  sphereCastRadius: 0.35
   interactionText: {fileID: 1437422840}
 --- !u!1001 &2136503305
 PrefabInstance:
