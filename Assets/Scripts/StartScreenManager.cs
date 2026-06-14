@@ -1,19 +1,32 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 using System.Collections;
 
 public class StartScreenManager : MonoBehaviour
 {
     [SerializeField] private CanvasGroup startScreen;
+    [SerializeField] private FirstPersonController playerController;
 
     private bool gameStarted = false;
+
+    private void Start()
+    {
+        if (playerController != null)
+        {
+            playerController.canMove = false;
+        }
+    }
 
     private void Update()
     {
         if (!gameStarted && Input.GetKeyDown(KeyCode.Space))
         {
             gameStarted = true;
+
+            if (playerController != null)
+            {
+                playerController.canMove = true;
+            }
+
             StartCoroutine(FadeOut());
         }
     }

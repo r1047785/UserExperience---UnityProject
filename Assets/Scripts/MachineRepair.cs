@@ -68,6 +68,8 @@ public class MachineRepair : MonoBehaviour
         if (factoryLights != null)
             factoryLights.MachineRepaired();
 
+        ScoreManager.Instance.AddScore(10);
+
         Debug.Log(gameObject.name + " repaired!");
     }
 

@@ -10,24 +10,32 @@ public class FirstPersonController : MonoBehaviour
 
     [Header("Camera / Muisgevoeligheid")]
     public float muisGevoeligheid = 200f;
-    public Transform cameraTransform; 
-    
+    public Transform cameraTransform;
+
+    [Header("Game State")]
+    public bool canMove = false;
+
     private CharacterController controller;
     private float vertikaleSnelheid = 0f;
     private float cameraRotatieX = 0f;
-    private const float zwaartekracht = -19.62f; 
+    private const float zwaartekracht = -19.62f;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
 
-       
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     void Update()
     {
+        if (!canMove)
+        {
+            OntsnapMuis();
+            return;
+        }
+
         BewerkCamera();
         BewerkBeweging();
         OntsnapMuis();
@@ -37,35 +45,27 @@ public class FirstPersonController : MonoBehaviour
     {
         if (cameraTransform == null) return;
 
-    
         float muisX = Input.GetAxis("Mouse X") * muisGevoeligheid * Time.deltaTime;
         float muisY = Input.GetAxis("Mouse Y") * muisGevoeligheid * Time.deltaTime;
 
-        
         cameraRotatieX -= muisY;
         cameraRotatieX = Mathf.Clamp(cameraRotatieX, -80f, 80f);
         cameraTransform.localRotation = Quaternion.Euler(cameraRotatieX, 0f, 0f);
 
-        
         transform.Rotate(Vector3.up * muisX);
     }
 
     void BewerkBeweging()
     {
-       
-        float horizontaal = Input.GetAxis("Horizontal"); 
-        float vertikaal   = Input.GetAxis("Vertical");   
+        float horizontaal = Input.GetAxis("Horizontal");
+        float vertikaal = Input.GetAxis("Vertical");
 
-       
         Vector3 richting = transform.right * horizontaal + transform.forward * vertikaal;
 
-      
         float huidigSnelheid = Input.GetKey(KeyCode.LeftShift) ? renSnelheid : loopSnelheid;
 
-        
         if (controller.isGrounded)
         {
-           
             vertikaleSnelheid = -2f;
 
             if (Input.GetButtonDown("Jump"))
@@ -75,21 +75,17 @@ public class FirstPersonController : MonoBehaviour
         }
         else
         {
-           
             vertikaleSnelheid += zwaartekracht * Time.deltaTime;
         }
 
-
         Vector3 beweging = richting * huidigSnelheid;
         beweging.y = vertikaleSnelheid;
-
 
         controller.Move(beweging * Time.deltaTime);
     }
 
     void OntsnapMuis()
     {
-        
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Cursor.lockState = CursorLockMode.None;
