@@ -66,7 +66,9 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleMachineInteraction(MachineRepair machine)
     {
-        ShowInteraction("Press R to repair", machine.GetComponentInParent<Outline>());
+        string message = "Press R to repair\nRequired: " + machine.RequiredTool;
+
+        ShowInteraction(message, machine.GetComponentInParent<Outline>());
 
         if (!Input.GetKeyDown(KeyCode.R))
             return;
@@ -77,7 +79,7 @@ public class PlayerInteraction : MonoBehaviour
         }
         else
         {
-            Debug.Log("Wrong tool!");
+            Debug.Log("Wrong tool! Required: " + machine.RequiredTool);
         }
     }
 

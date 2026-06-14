@@ -11,6 +11,8 @@ public class MachineRepair : BreakableMachine
     [SerializeField] private FactoryLights factoryLights;
     [SerializeField] private AlarmManager alarmManager;
 
+    public string RequiredTool => requiredTool;
+
     private void Start()
     {
         if (brokenMarker != null)
