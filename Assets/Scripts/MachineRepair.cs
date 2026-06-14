@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MachineRepair : MonoBehaviour
+public class MachineRepair : BreakableMachine
 {
     [SerializeField] private string requiredTool = "Wrench";
     [SerializeField] private GameObject brokenMarker;
@@ -11,10 +11,6 @@ public class MachineRepair : MonoBehaviour
     [SerializeField] private FactoryLights factoryLights;
     [SerializeField] private AlarmManager alarmManager;
 
-    private bool isBroken = false;
-
-    public bool IsBroken => isBroken;
-
     private void Start()
     {
         if (brokenMarker != null)
@@ -24,17 +20,17 @@ public class MachineRepair : MonoBehaviour
             smokeLoop.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
     }
 
-    public bool CanRepair(string currentTool)
+    public override bool CanRepair(string currentTool)
     {
         return isBroken && currentTool == requiredTool;
     }
 
-    public void Break()
+    public override void Break()
     {
         if (isBroken)
             return;
 
-        isBroken = true;
+        base.Break();
 
         if (brokenMarker != null)
             brokenMarker.SetActive(true);
@@ -56,12 +52,12 @@ public class MachineRepair : MonoBehaviour
         Debug.Log(gameObject.name + " is kapot!");
     }
 
-    public void Repair()
+    public override void Repair()
     {
         if (!isBroken)
             return;
 
-        isBroken = false;
+        base.Repair();
 
         if (brokenMarker != null)
             brokenMarker.SetActive(false);
@@ -75,7 +71,8 @@ public class MachineRepair : MonoBehaviour
         if (alarmManager != null)
             alarmManager.MachineRepaired();
 
-        ScoreManager.Instance.AddScore(10);
+        if (ScoreManager.Instance != null)
+            ScoreManager.Instance.AddScore(10);
 
         Debug.Log(gameObject.name + " repaired!");
     }

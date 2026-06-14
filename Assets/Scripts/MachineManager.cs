@@ -2,12 +2,17 @@ using UnityEngine;
 
 public class MachineManager : MonoBehaviour
 {
+    [Header("Machines")]
     [SerializeField] private MachineRepair[] machines;
+
+    [Header("Break Timing")]
     [SerializeField] private float minBreakTime = 10f;
     [SerializeField] private float maxBreakTime = 20f;
 
-    private float timer;
-    private bool gameStarted = false;
+    private float breakTimer;
+    private bool machineSystemStarted = false;
+
+    public bool MachineSystemStarted => machineSystemStarted;
 
     private void Start()
     {
@@ -16,15 +21,15 @@ public class MachineManager : MonoBehaviour
 
     private void Update()
     {
-        if (!gameStarted)
+        if (!machineSystemStarted)
             return;
 
         if (HasBrokenMachine())
             return;
 
-        timer -= Time.deltaTime;
+        breakTimer -= Time.deltaTime;
 
-        if (timer <= 0f)
+        if (breakTimer <= 0f)
         {
             BreakRandomMachine();
             SetNextBreakTime();
@@ -33,15 +38,20 @@ public class MachineManager : MonoBehaviour
 
     public void StartMachineSystem()
     {
-        gameStarted = true;
+        machineSystemStarted = true;
         SetNextBreakTime();
+    }
+
+    public void StopMachineSystem()
+    {
+        machineSystemStarted = false;
     }
 
     private bool HasBrokenMachine()
     {
         foreach (MachineRepair machine in machines)
         {
-            if (machine.IsBroken)
+            if (machine != null && machine.IsBroken)
                 return true;
         }
 
@@ -50,15 +60,46 @@ public class MachineManager : MonoBehaviour
 
     private void BreakRandomMachine()
     {
-        if (machines.Length == 0)
+        MachineRepair machine = GetRandomWorkingMachine();
+
+        if (machine == null)
             return;
 
-        int randomIndex = Random.Range(0, machines.Length);
-        machines[randomIndex].Break();
+        machine.Break();
+    }
+
+    private MachineRepair GetRandomWorkingMachine()
+    {
+        int workingMachineCount = 0;
+
+        foreach (MachineRepair machine in machines)
+        {
+            if (machine != null && !machine.IsBroken)
+                workingMachineCount++;
+        }
+
+        if (workingMachineCount == 0)
+            return null;
+
+        int randomIndex = Random.Range(0, workingMachineCount);
+        int currentIndex = 0;
+
+        foreach (MachineRepair machine in machines)
+        {
+            if (machine == null || machine.IsBroken)
+                continue;
+
+            if (currentIndex == randomIndex)
+                return machine;
+
+            currentIndex++;
+        }
+
+        return null;
     }
 
     private void SetNextBreakTime()
     {
-        timer = Random.Range(minBreakTime, maxBreakTime);
+        breakTimer = Random.Range(minBreakTime, maxBreakTime);
     }
 }

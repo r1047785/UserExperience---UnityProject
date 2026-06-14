@@ -4,18 +4,27 @@ public class ToolPickup : MonoBehaviour
 {
     [SerializeField] private string toolName;
 
+    private PlayerInventory playerInventory;
+
+    private void Start()
+    {
+        playerInventory = FindFirstObjectByType<PlayerInventory>();
+    }
+
+    public string ToolName => toolName;
+
     public void Pickup()
     {
+        if (playerInventory == null)
+            return;
+
         if (PlayerInventory.currentTool != "")
         {
             Debug.Log("Drop eerst je huidige tool!");
             return;
         }
 
-        PlayerInventory.currentTool = toolName;
-
-        PlayerInventory inventory = FindFirstObjectByType<PlayerInventory>();
-        inventory.EquipTool(toolName);
+        playerInventory.EquipTool(toolName);
 
         gameObject.SetActive(false);
 

@@ -7,6 +7,7 @@ public class StartScreenManager : MonoBehaviour
     [SerializeField] private FirstPersonController playerController;
     [SerializeField] private AudioSource introAudio;
     [SerializeField] private MachineManager machineManager;
+    [SerializeField] private TimerManager timerManager;
 
     private bool gameStarted = false;
 
@@ -53,6 +54,11 @@ public class StartScreenManager : MonoBehaviour
         {
             machineManager.StartMachineSystem();
         }
+
+        if (timerManager != null)
+        {
+            timerManager.StartTimer();
+        }
     }
 
     private IEnumerator FadeOut()
@@ -63,7 +69,9 @@ public class StartScreenManager : MonoBehaviour
         while (timer < duration)
         {
             timer += Time.deltaTime;
+
             startScreen.alpha = Mathf.Lerp(1f, 0f, timer / duration);
+
             yield return null;
         }
 

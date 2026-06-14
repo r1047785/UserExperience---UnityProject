@@ -4,65 +4,90 @@ using UnityEngine;
 public class PlayerInteraction : MonoBehaviour
 {
     [SerializeField] private float interactDistance = 8f;
+    [SerializeField] private float sphereCastRadius = 0.35f;
     [SerializeField] private TextMeshProUGUI interactionText;
 
     private Outline currentOutline;
+    private Camera playerCamera;
 
     private void Start()
     {
+        playerCamera = Camera.main;
         HideInteraction();
     }
 
     private void Update()
     {
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        if (playerCamera == null)
+            return;
 
-        if (Physics.SphereCast(ray, 0.35f, out RaycastHit hit, interactDistance))
+        CheckInteraction();
+    }
+
+    private void CheckInteraction()
+    {
+        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+
+        if (!Physics.SphereCast(ray, sphereCastRadius, out RaycastHit hit, interactDistance))
         {
-            ToolPickup tool = hit.collider.GetComponentInParent<ToolPickup>();
+            HideInteraction();
+            return;
+        }
 
-            if (tool != null)
-            {
-                ShowInteraction("Press E to pickup", tool.GetComponentInParent<Outline>());
+        ToolPickup tool = hit.collider.GetComponentInParent<ToolPickup>();
 
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    tool.Pickup();
-                    HideInteraction();
-                }
+        if (tool != null)
+        {
+            HandleToolInteraction(tool);
+            return;
+        }
 
-                return;
-            }
+        MachineRepair machine = hit.collider.GetComponentInParent<MachineRepair>();
 
-            MachineRepair machine = hit.collider.GetComponentInParent<MachineRepair>();
-
-            if (machine != null)
-            {
-                ShowInteraction("Press R to repair", machine.GetComponentInParent<Outline>());
-
-                if (Input.GetKeyDown(KeyCode.R))
-                {
-                    if (machine.CanRepair(PlayerInventory.currentTool))
-                    {
-                        machine.Repair();
-                    }
-                    else
-                    {
-                        Debug.Log("Wrong tool!");
-                    }
-                }
-
-                return;
-            }
+        if (machine != null)
+        {
+            HandleMachineInteraction(machine);
+            return;
         }
 
         HideInteraction();
     }
 
+    private void HandleToolInteraction(ToolPickup tool)
+    {
+        ShowInteraction("Press E to pickup", tool.GetComponentInParent<Outline>());
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            tool.Pickup();
+            HideInteraction();
+        }
+    }
+
+    private void HandleMachineInteraction(MachineRepair machine)
+    {
+        ShowInteraction("Press R to repair", machine.GetComponentInParent<Outline>());
+
+        if (!Input.GetKeyDown(KeyCode.R))
+            return;
+
+        if (machine.CanRepair(PlayerInventory.currentTool))
+        {
+            machine.Repair();
+        }
+        else
+        {
+            Debug.Log("Wrong tool!");
+        }
+    }
+
     private void ShowInteraction(string message, Outline outline)
     {
-        interactionText.text = message;
-        interactionText.gameObject.SetActive(true);
+        if (interactionText != null)
+        {
+            interactionText.text = message;
+            interactionText.gameObject.SetActive(true);
+        }
 
         if (outline == currentOutline)
             return;
@@ -77,7 +102,9 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HideInteraction()
     {
-        interactionText.gameObject.SetActive(false);
+        if (interactionText != null)
+            interactionText.gameObject.SetActive(false);
+
         ClearOutline();
     }
 
