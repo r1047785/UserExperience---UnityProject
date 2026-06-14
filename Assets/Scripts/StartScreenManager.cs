@@ -5,6 +5,7 @@ public class StartScreenManager : MonoBehaviour
 {
     [SerializeField] private CanvasGroup startScreen;
     [SerializeField] private FirstPersonController playerController;
+    [SerializeField] private AudioSource introAudio;
 
     private bool gameStarted = false;
 
@@ -13,6 +14,7 @@ public class StartScreenManager : MonoBehaviour
         if (playerController != null)
         {
             playerController.canMove = false;
+            playerController.canLook = false;
         }
     }
 
@@ -21,13 +23,29 @@ public class StartScreenManager : MonoBehaviour
         if (!gameStarted && Input.GetKeyDown(KeyCode.Space))
         {
             gameStarted = true;
+            StartCoroutine(StartIntroSequence());
+        }
+    }
 
-            if (playerController != null)
-            {
-                playerController.canMove = true;
-            }
+    private IEnumerator StartIntroSequence()
+    {
+        yield return StartCoroutine(FadeOut());
 
-            StartCoroutine(FadeOut());
+        if (playerController != null)
+        {
+            playerController.canLook = true;
+            playerController.canMove = false;
+        }
+
+        if (introAudio != null)
+        {
+            introAudio.Play();
+            yield return new WaitForSeconds(introAudio.clip.length);
+        }
+
+        if (playerController != null)
+        {
+            playerController.canMove = true;
         }
     }
 
@@ -39,9 +57,7 @@ public class StartScreenManager : MonoBehaviour
         while (timer < duration)
         {
             timer += Time.deltaTime;
-
             startScreen.alpha = Mathf.Lerp(1f, 0f, timer / duration);
-
             yield return null;
         }
 

@@ -14,6 +14,7 @@ public class FirstPersonController : MonoBehaviour
 
     [Header("Game State")]
     public bool canMove = false;
+    public bool canLook = false;
 
     private CharacterController controller;
     private float vertikaleSnelheid = 0f;
@@ -30,14 +31,16 @@ public class FirstPersonController : MonoBehaviour
 
     void Update()
     {
-        if (!canMove)
+        if (canLook)
         {
-            OntsnapMuis();
-            return;
+            BewerkCamera();
         }
 
-        BewerkCamera();
-        BewerkBeweging();
+        if (canMove)
+        {
+            BewerkBeweging();
+        }
+
         OntsnapMuis();
     }
 
