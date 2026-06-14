@@ -1,23 +1,33 @@
+using TMPro;
 using UnityEngine;
 
 public class PlayerInventory : MonoBehaviour
 {
     public static string currentTool = "";
 
-    public GameObject heldWrench;
-    public GameObject heldScrewdriver;
-    public GameObject heldHammer;
-    public GameObject heldPliers;
+    [SerializeField] private GameObject heldWrench;
+    [SerializeField] private GameObject heldScrewdriver;
+    [SerializeField] private GameObject heldHammer;
+    [SerializeField] private GameObject heldPliers;
 
-    public GameObject wrenchPrefab;
-    public GameObject screwdriverPrefab;
-    public GameObject hammerPrefab;
-    public GameObject pliersPrefab;
+    [SerializeField] private GameObject wrenchPrefab;
+    [SerializeField] private GameObject screwdriverPrefab;
+    [SerializeField] private GameObject hammerPrefab;
+    [SerializeField] private GameObject pliersPrefab;
 
-    public Transform dropPoint;
+    [SerializeField] private Transform dropPoint;
+    [SerializeField] private TextMeshProUGUI currentToolText;
+    [SerializeField] private ToolUI toolUI;
+
+    private void Start()
+    {
+        UpdateToolUI();
+    }
 
     public void EquipTool(string toolName)
     {
+        currentTool = toolName;
+
         heldWrench.SetActive(false);
         heldScrewdriver.SetActive(false);
         heldHammer.SetActive(false);
@@ -31,9 +41,11 @@ public class PlayerInventory : MonoBehaviour
             heldHammer.SetActive(true);
         else if (toolName == "Pliers")
             heldPliers.SetActive(true);
+
+        UpdateToolUI();
     }
 
-    void Update()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.G) && currentTool != "")
         {
@@ -55,9 +67,7 @@ public class PlayerInventory : MonoBehaviour
             prefabToDrop = pliersPrefab;
 
         if (prefabToDrop != null)
-        {
             Instantiate(prefabToDrop, dropPoint.position, dropPoint.rotation);
-        }
 
         currentTool = "";
 
@@ -66,6 +76,24 @@ public class PlayerInventory : MonoBehaviour
         heldHammer.SetActive(false);
         heldPliers.SetActive(false);
 
-        Debug.Log("Tool gedropt");
+        UpdateToolUI();
+    }
+
+    private void UpdateToolUI()
+    {
+        if (currentToolText != null)
+        {
+            currentToolText.text = currentTool == ""
+                ? "Tool: None"
+                : "Tool: " + currentTool;
+        }
+
+        if (toolUI == null)
+            return;
+
+        if (currentTool == "")
+            toolUI.ClearTool();
+        else
+            toolUI.SetTool(currentTool);
     }
 }
