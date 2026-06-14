@@ -7,6 +7,7 @@ public class MachineManager : MonoBehaviour
     [SerializeField] private float maxBreakTime = 20f;
 
     private float timer;
+    private bool gameStarted = false;
 
     private void Start()
     {
@@ -15,6 +16,9 @@ public class MachineManager : MonoBehaviour
 
     private void Update()
     {
+        if (!gameStarted)
+            return;
+
         if (HasBrokenMachine())
             return;
 
@@ -25,6 +29,12 @@ public class MachineManager : MonoBehaviour
             BreakRandomMachine();
             SetNextBreakTime();
         }
+    }
+
+    public void StartMachineSystem()
+    {
+        gameStarted = true;
+        SetNextBreakTime();
     }
 
     private bool HasBrokenMachine()
@@ -44,7 +54,6 @@ public class MachineManager : MonoBehaviour
             return;
 
         int randomIndex = Random.Range(0, machines.Length);
-
         machines[randomIndex].Break();
     }
 

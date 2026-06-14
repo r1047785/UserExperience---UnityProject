@@ -6,6 +6,7 @@ public class StartScreenManager : MonoBehaviour
     [SerializeField] private CanvasGroup startScreen;
     [SerializeField] private FirstPersonController playerController;
     [SerializeField] private AudioSource introAudio;
+    [SerializeField] private MachineManager machineManager;
 
     private bool gameStarted = false;
 
@@ -46,6 +47,11 @@ public class StartScreenManager : MonoBehaviour
         if (playerController != null)
         {
             playerController.canMove = true;
+        }
+
+        if (machineManager != null)
+        {
+            machineManager.StartMachineSystem();
         }
     }
 
