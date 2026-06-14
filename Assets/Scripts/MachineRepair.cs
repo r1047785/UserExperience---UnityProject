@@ -9,6 +9,7 @@ public class MachineRepair : MonoBehaviour
     [SerializeField] private Transform explosionPoint;
     [SerializeField] private ParticleSystem smokeLoop;
     [SerializeField] private FactoryLights factoryLights;
+    [SerializeField] private AlarmManager alarmManager;
 
     private bool isBroken = false;
 
@@ -49,6 +50,9 @@ public class MachineRepair : MonoBehaviour
         if (factoryLights != null)
             factoryLights.MachineBroken();
 
+        if (alarmManager != null)
+            alarmManager.MachineBroken();
+
         Debug.Log(gameObject.name + " is kapot!");
     }
 
@@ -67,6 +71,9 @@ public class MachineRepair : MonoBehaviour
 
         if (factoryLights != null)
             factoryLights.MachineRepaired();
+
+        if (alarmManager != null)
+            alarmManager.MachineRepaired();
 
         ScoreManager.Instance.AddScore(10);
 
