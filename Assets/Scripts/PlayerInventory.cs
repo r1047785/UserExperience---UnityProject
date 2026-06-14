@@ -24,6 +24,14 @@ public class PlayerInventory : MonoBehaviour
         UpdateToolUI();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G) && currentTool != "")
+        {
+            DropTool();
+        }
+    }
+
     public void EquipTool(string toolName)
     {
         currentTool = toolName;
@@ -45,29 +53,15 @@ public class PlayerInventory : MonoBehaviour
         UpdateToolUI();
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.G) && currentTool != "")
-        {
-            DropTool();
-        }
-    }
-
     private void DropTool()
     {
-        GameObject prefabToDrop = null;
-
-        if (currentTool == "Wrench")
-            prefabToDrop = wrenchPrefab;
-        else if (currentTool == "Screwdriver")
-            prefabToDrop = screwdriverPrefab;
-        else if (currentTool == "Hammer")
-            prefabToDrop = hammerPrefab;
-        else if (currentTool == "Pliers")
-            prefabToDrop = pliersPrefab;
+        GameObject prefabToDrop = GetCurrentToolPrefab();
 
         if (prefabToDrop != null)
-            Instantiate(prefabToDrop, dropPoint.position, dropPoint.rotation);
+        {
+            GameObject droppedTool = Instantiate(prefabToDrop, dropPoint.position, dropPoint.rotation);
+            SetupDroppedTool(droppedTool);
+        }
 
         currentTool = "";
 
@@ -77,6 +71,41 @@ public class PlayerInventory : MonoBehaviour
         heldPliers.SetActive(false);
 
         UpdateToolUI();
+    }
+
+    private GameObject GetCurrentToolPrefab()
+    {
+        if (currentTool == "Wrench")
+            return wrenchPrefab;
+
+        if (currentTool == "Screwdriver")
+            return screwdriverPrefab;
+
+        if (currentTool == "Hammer")
+            return hammerPrefab;
+
+        if (currentTool == "Pliers")
+            return pliersPrefab;
+
+        return null;
+    }
+
+    private void SetupDroppedTool(GameObject droppedTool)
+    {
+        Outline outline = droppedTool.GetComponent<Outline>();
+
+        if (outline != null)
+        {
+            outline.enabled = true;
+            outline.OutlineMode = Outline.Mode.OutlineAll;
+            outline.OutlineColor = Color.white;
+            outline.OutlineWidth = 2f;
+        }
+
+        if (droppedTool.GetComponent<DroppedToolOutline>() == null)
+        {
+            droppedTool.AddComponent<DroppedToolOutline>();
+        }
     }
 
     private void UpdateToolUI()
